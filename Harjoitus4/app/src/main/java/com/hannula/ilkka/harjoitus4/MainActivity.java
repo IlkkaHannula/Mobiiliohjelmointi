@@ -133,8 +133,6 @@ public class MainActivity extends AppCompatActivity {
         int vastaus = luku1 / luku2;
         tulosruutu.setText(Integer.toString(vastaus));
         logiMerkinnat.add(osa1.getText().toString() + " / " + osa2 .getText().toString() + " = " + vastaus);
-        String teksti = osa1.getText().toString() + " / " + osa2 .getText().toString() + " = " + vastaus;
-        Log.d("myTag", teksti);
     }
 
     public void tyhjenna() {
@@ -147,11 +145,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void naytaLogi() {
         String teksti = "";
-        for(int i=0; i<5; i++){
-            int viimeinen = logiMerkinnat.size();
-            teksti += logiMerkinnat.get(viimeinen-i);
+        for(int i=0; i<logiMerkinnat.size(); i++){
+            teksti += logiMerkinnat.get(i);
+            teksti += "\n";
         }
-        logiTextview.setText("");
+        logiTextview.setText(teksti);
     }
 
 }
