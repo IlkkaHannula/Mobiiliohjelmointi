@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="@string/vasemmalle"
+            android:textSize="30sp"
+            android:onClick="liikuVasemmalle" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="@string/oikealle"
+            android:textSize="30sp"
+            android:onClick="liikuOikealle" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:background="@drawable/kehys"
+            android:text="@string/poista"
+            android:textSize="30sp"
+            android:onClick="poistaMerkki" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="1"
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="2"
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="3"
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="+"
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="4"
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="5"
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="6"
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="-"
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="7"
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="8"
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="9"
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="*"
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="("
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text=")"
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="0"
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/kehys"
+            android:text="/"
+            android:textSize="30sp"
+            android:onClick="lisaaMerkki" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

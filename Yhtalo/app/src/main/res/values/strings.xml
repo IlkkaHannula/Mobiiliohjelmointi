@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">Yhtalo</string>
+
+    <string name="action_settings">Asetukset</string>
+    <string name="osoittaja">osoittaja</string>
+    <string name="nimittaja">nimittäjä</string>
+    <string name="plus" translatable="false">+</string>
+    <string name="miinus" translatable="false">-</string>
+    <string name="kerto" translatable="false">*</string>
+    <string name="jako" translatable="false">/</string>
+    <string name="yhtakuin" translatable="false">=</string>
+    <string name="vasenpuoli">vasenpuoli</string>
+    <string name="oikeapuoli">oikeapuoli</string>
+    <string name="luotermi">Luo termi</string>
+    <string name="lukitse">Lukitse</string>
+    <string name="laske">Laske</string>
+    <string name="vapauta">Vapauta</string>
+    <string name="kaanna">Käännä</string>
+    <string name="siisti">Siisti</string>
+    <string name="tyhjenna">Tyhjennä</string>
+    <string name="palauta">Palauta tilanne</string>
+    <string name="vasemmalle">&lt;</string>
+    <string name="oikealle">&gt;</string>
+    <string name="poista">&lt;-</string>
+    <string name="naytaNappis">Näytä näppäimistö</string>
+    <string name="palaa">Takaisin lisäämään</string>
+
+</resources>

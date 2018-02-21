@@ -1,0 +1,247 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/kokohoito"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+
+    <!-- TODO zoomausta varten muutto?-->
+
+    <LinearLayout
+        android:id="@+id/ylaosa"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:layout_margin="5dp"
+        android:background="@drawable/kehys_oranssi"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/siirtoalue"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="start|center"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:id="@+id/vasenpuoli"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:gravity="end|center"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/yhtakuin"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/yhtakuin"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <LinearLayout
+                android:id="@+id/oikeapuoli"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:gravity="start|center"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/keskiosa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/syotelayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/pysty"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/osoittaja"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/osoittaja" />
+
+                <EditText
+                    android:id="@+id/nimittaja"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/nimittaja" />
+
+            </LinearLayout>
+
+            <GridLayout
+                android:id="@+id/merkit"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center">
+
+
+                <TextView
+                    android:id="@+id/plussa"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:layout_row="0"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/plus"
+                    android:textColor="#000000"
+                    android:textSize="30sp"
+                    android:onClick="etumerkinValinta"/>
+
+                <TextView
+                    android:id="@+id/miinus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:layout_row="1"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/miinus"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:onClick="etumerkinValinta"/>
+
+                <TextView
+                    android:id="@+id/kerto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_row="0"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/kerto"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:onClick="etumerkinValinta"/>
+
+                <TextView
+                    android:id="@+id/jako"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_row="1"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/jako"
+                    android:textSize="30sp"
+                    android:onClick="etumerkinValinta"/>
+
+                <TextView
+                    android:id="@+id/oikea"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:layout_gravity="center"
+                    android:layout_row="1"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/oikeapuoli"
+                    android:textStyle="bold"
+                    android:onClick="puolenValinta"/>
+
+                <TextView
+                    android:id="@+id/vasen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="2"
+                    android:layout_gravity="center"
+                    android:layout_row="0"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="@string/vasenpuoli"
+                    android:textColor="#000000"
+                    android:textStyle="bold"
+                    android:onClick="puolenValinta"/>
+
+            </GridLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nappilayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/luotermiNappi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="luoTermi"
+                android:text="@string/luotermi" />
+
+            <Button
+                android:id="@+id/lukitusNappi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="lukitse"
+                android:text="@string/lukitse" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/nappislayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffc3fff8">
+
+        <include layout="@layout/nappis"
+            android:id="@+id/nappaimisto"/>
+
+
+
+    </LinearLayout>
+
+
+    <ScrollView
+        android:id="@+id/historiaalue"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffc3fff8"
+        android:visibility="gone">
+
+
+        <LinearLayout
+            android:id="@+id/menneet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</LinearLayout>
+
+
+
