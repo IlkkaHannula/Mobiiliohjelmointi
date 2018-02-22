@@ -65,8 +65,7 @@ public class Muistio extends AppCompatActivity {
 
         imm = (InputMethodManager)this.getSystemService(Service.INPUT_METHOD_SERVICE);
 
-        //talla voi lisata tietoja, jolloin tarkastelu on helpompaa. huomiona kuitenkin, etta tulee
-        //todella paljon toasteja, joten kannattaa avata tuon kanssa ja heti peraan uudestaan ilman
+        //talla voi lisata tietoja, jolloin tarkastelu on helpompaa
         //lisaa_tarkistus_dataa();
     }
 
@@ -106,13 +105,16 @@ public class Muistio extends AppCompatActivity {
                         //otetaan syotteet ylos ja tarkistetaan
                         String nimi = nimi_teksti.getText().toString().toUpperCase();
                         String numero = numero_teksti.getText().toString().toUpperCase();
-                        if (!tarkista_syotteet(nimi, numero, "", "")) {
+                        String synttari = synttari_teksti.getText().toString().toUpperCase();
+                        String nimppari = nimppari_teksti.getText().toString().toUpperCase();
+
+                        if (!tarkista_syotteet(nimi, numero, synttari, nimppari,"", "")) {
                             return;
                         }
 
                         //lisataan tiedot tietokantaan ja nakyville,  scrollataan kohdalle
-                        lisaa_alkio(nimi, numero, "");
-                        tietokanta.insertData(nimi, numero);
+                        lisaa_alkio(nimi, numero, synttari, nimppari,"");
+                        tietokanta.insertData(nimi, numero, synttari, nimppari);
                         Toast.makeText(Muistio.this, "Henkilön " + nimi.substring(0, 1) +
                                 nimi.substring(1).toLowerCase() + " tiedot lisätty", Toast.LENGTH_SHORT).show();
                         alusta_tekstit();
@@ -149,11 +151,12 @@ public class Muistio extends AppCompatActivity {
                 });
     }
 
-    //TODO tahan mukaan muutkin kohdat
     //tama onclicklistener huolehtii siita, etta oikealle tiedolle tehdaan muokkaus
-    public void valmistele_muokkaus(final String nimi, final String numero){
+    public void valmistele_muokkaus(final String nimi, final String numero, final String synttari, final String nimppari){
         nimi_teksti.setText(nimi);
         numero_teksti.setText(numero);
+        synttari_teksti.setText(synttari);
+        nimppari_teksti.setText(nimppari);
 
 
         toteuta_muokkaus_nappi.setEnabled(true);
@@ -163,7 +166,7 @@ public class Muistio extends AppCompatActivity {
 
                     //alustetaan siis muokkaus napin onclicklisteri oikeille tiedoille
                     public void onClick(View v) {
-                        muokkaa(nimi, numero);
+                        muokkaa(nimi, numero, synttari, nimppari);
                         imm.hideSoftInputFromWindow(nimi_teksti.getWindowToken(), 0);
                     }
                 }
@@ -172,7 +175,7 @@ public class Muistio extends AppCompatActivity {
 
     //muokkaamattomat parametrit anneteaan niita tapauksia varten, joissa muokataan vanhaa
     //tietoa, eli silloin muokkaamaton nimi/numero sallitaan paallekkaisyyksissa
-    public boolean tarkista_syotteet(String nimi,String numero,
+    public boolean tarkista_syotteet(String nimi, String numero, String synttari_pvm, String nimppari_pvm,
                                      String muokkaamaton_nimi, String muokkaamaton_numero){
 
         if (nimi.equals("")) {
@@ -185,16 +188,11 @@ public class Muistio extends AppCompatActivity {
         }
 
         //valilyontien maara rajattu yhtee, jotta valtytaan extra valilyonnin kanssa samoilta nimilta
-        int maara = 0;
-        for( int i=0; i<nimi.length(); i++ ) {
-            if( nimi.charAt(i) == ' ' ) {
-                if (maara == 1){
-                    Toast.makeText(Muistio.this, "Nimessä liikaa välilyöntejä", Toast.LENGTH_SHORT).show();
-                    return false;
-                }
-                maara++;
-            }
+        if (laske_maara(nimi, ' ') > 1){
+            Toast.makeText(Muistio.this, "Nimessä liikaa välilyöntejä", Toast.LENGTH_SHORT).show();
+            return false;
         }
+
         Cursor data = tietokanta.getAllData();
         while (data.moveToNext()) {
             if (data.getString(1).equals(nimi.toUpperCase()) && !data.getString(1).equals(muokkaamaton_nimi)) {
@@ -207,12 +205,26 @@ public class Muistio extends AppCompatActivity {
             }
         }
 
-        /* Tarvisko jotain puh tai paivamaaria tarkistella?
-        if (!tarkista_tilinumero(tilinumero)) {
-            Toast.makeText(Muistio.this, "Tilinumero ei ole suomalaista IBAN-muotoa", Toast.LENGTH_SHORT).show();
+        if (laske_maara(synttari_pvm, '.') != 2){
+            Toast.makeText(Muistio.this, "Syntymäpäivä väärää muotoa", Toast.LENGTH_SHORT).show();
             return false;
-        }*/
+        }
+
+        if (laske_maara(nimppari_pvm, '.') != 2){
+            Toast.makeText(Muistio.this, "Nimipäivä väärää muotoa", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
+    }
+
+    public int laske_maara(String text, char merkki){
+        int maara = 0;
+        for( int i=0; i<text.length(); i++ ) {
+            if( text.charAt(i) == merkki ) {
+                maara++;
+            }
+        }
+        return maara;
     }
 
     public void nayta_tallennetut(){
@@ -256,19 +268,20 @@ public class Muistio extends AppCompatActivity {
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
-        //TODO TÄSSÄ HAETAAN TIETOKANNASTA
         //tehdaan jokaisesta alkiosta omat textviewit ja laitetaan ne layouttiin
         while (data.moveToNext()){
             String nimi = data.getString(1);
             final String numero = data.getString(2);
+            final String synttari_pvm = data.getString(3);
+            final String nimppari_pvm = data.getString(4);
 
-            TextView tietoalkio = tee_tieto_alkio(nimi, numero);
+            TextView tietoalkio = tee_tieto_alkio(nimi, numero, synttari_pvm, nimppari_pvm);
             layout.addView(tietoalkio);
         }
         return layout;
     }
 
-    public TextView tee_tieto_alkio(String nimi, final String numero){
+    public TextView tee_tieto_alkio(String nimi, final String numero, final String synttari_pvm, final String nimppari_pvm){
 
         //tarkastetaan loytyyko valilyontija ja ja kirjoitetaan nimet jarkevampaan muotoon
         int valin_paikka = nimi.indexOf(" ");
@@ -285,7 +298,7 @@ public class Muistio extends AppCompatActivity {
         //tehdaan textview jossa on onclick listener kopioinnin, muokkauksen ja poiston takia
         TextView tietoalkio = new TextView(this);
         tietoalkio.setTextSize(9 * getResources().getDisplayMetrics().density);
-        tietoalkio.setText("Nimi: " + naytettava_nimi + "\n" + "Puhelinnumero: " + numero + "\n");
+        tietoalkio.setText(naytettava_nimi + "\n" + "Puh: " + numero + "\n" + synttari_pvm + "   \n" + nimppari_pvm + "\n");
         tietoalkio.setOnLongClickListener(new View.OnLongClickListener() {
 
             @Override
@@ -301,7 +314,7 @@ public class Muistio extends AppCompatActivity {
                     return true;
                 }
                 else if (muokkaus) {
-                    valmistele_muokkaus(naytettava_nimi, numero);
+                    valmistele_muokkaus(naytettava_nimi, numero, synttari_pvm, nimppari_pvm);
                     return true;
                 }
                 else {
@@ -364,26 +377,28 @@ public class Muistio extends AppCompatActivity {
     }
 
     //muokkaa saa parametreinaan vanhat tiedot
-    public void muokkaa(String nimi, String numero){
+    public void muokkaa(String nimi, String numero, String synttari, String nimppari){
         String id = etsi_id(nimi.toUpperCase());
 
         //otetaan ylos muutettavat tiedot ja muokataan dataa
         String uusi_nimi = nimi_teksti.getText().toString().toUpperCase();
         String uusi_numero = numero_teksti.getText().toString().toUpperCase();
-        //TODO TÄHÄN UUDET TIEDOT
+        String uusi_synttari = synttari_teksti.getText().toString().toUpperCase();
+        String uusi_nimppari = nimppari_teksti.getText().toString().toUpperCase();
 
-        //jos mitaan ei muokattu ei reagoidakkaan //TODO JA TAHAN
-        if (uusi_nimi.equals(nimi.toUpperCase()) && uusi_numero.equals(numero)){
+        //jos mitaan ei muokattu ei reagoidakkaan
+        if (uusi_nimi.equals(nimi.toUpperCase()) && uusi_numero.equals(numero) && uusi_synttari.equals(synttari)
+                && uusi_nimppari.equals(nimppari)){
             Toast.makeText(Muistio.this, "Mitään ei muutettu", Toast.LENGTH_SHORT).show();
             muokkaus_pois();
             return;
         }
         //jos tiedot ei kelpaa annetaan kayttajan yrittaa uudestaan
-        if (!tarkista_syotteet(uusi_nimi, uusi_numero, nimi.toUpperCase(), numero)) {
+        if (!tarkista_syotteet(uusi_nimi, uusi_numero, synttari, nimppari, nimi.toUpperCase(), numero)) {
             return;
         }
         //kutsutaan metodia toteuttamaan muokkaus
-        toteuta_muokkaus(id, nimi.toUpperCase(), uusi_nimi, uusi_numero);
+        toteuta_muokkaus(id, nimi.toUpperCase(), uusi_nimi, uusi_numero, uusi_synttari, uusi_nimppari);
         Toast.makeText(Muistio.this, "Henkilön " + nimi + " tiedot muokattu", Toast.LENGTH_SHORT).show();
 
         //tuskin kayttajan tarvitsee montaa muokata, joten muokkauksesta pois vahinkomuokkausten valttamiseksi
@@ -393,15 +408,15 @@ public class Muistio extends AppCompatActivity {
 
     //tehdaan siirto ensin nakyvissa ja sen jalkeen kulissien takana, nain indeksit ei sotkeudu kun
     //tietokantaa kuitenkin kaytetaan jarjestelyjen laskemiseen
-    public void toteuta_muokkaus(String id, String nimi, String uusi_nimi, String uusi_numero){
+    public void toteuta_muokkaus(String id, String nimi, String uusi_nimi, String uusi_numero, String uusi_syntari, String uusi_nimppari){
         poista(nimi.toUpperCase());
-        lisaa_alkio(uusi_nimi, uusi_numero, nimi);
-        tietokanta.updateData(id, uusi_nimi, uusi_numero);
+        lisaa_alkio(uusi_nimi, uusi_numero, uusi_syntari, uusi_nimppari, nimi);
+        tietokanta.updateData(id, uusi_nimi, uusi_numero, uusi_syntari, uusi_nimppari);
     }
 
     //tehdaan uusi alkio, etsitaan sen paikka ja lisataan se sinne
-    public void lisaa_alkio(String nimi, String numero, String vanha_nimi){
-        TextView lisattava = tee_tieto_alkio(nimi, numero);
+    public void lisaa_alkio(String nimi, String numero, String synttari_pvm, String nimppari_pvm, String vanha_nimi){
+        TextView lisattava = tee_tieto_alkio(nimi, numero, synttari_pvm, nimppari_pvm);
         int lisays_indeksi = loyda_lisattava_indeksi(nimi.toUpperCase(), vanha_nimi);
         if (lisays_indeksi == 0){
             muokkaa_nappi.setEnabled(true);
@@ -592,21 +607,22 @@ public class Muistio extends AppCompatActivity {
     public void alusta_tekstit(){
         nimi_teksti.setText("");
         numero_teksti.setText("");
-        //TODO TÄHÄN MUUTKIN
+        synttari_teksti.setText("");
+        nimppari_teksti.setText("");
     }
 
     //tama funktion luo validia dataa testauksen helpottamista varten
     public void lisaa_tarkistus_dataa(){
-        String[] nimet = {"aino","matti","jukka","kari","ville","pekka","riku","joona","suvi","jarno","kalle",
-        "akseli","teemu","jari","olli","raimo","anna","aatu","laura","ritva","tuija","kaarlo","johanna","mari"};
-        //TODO TÄHÄN VIELÄ NIMPPARIT JA SYNTTARIT
-        int j = 104;
+        String[] nimet = {"Aino","Matti","Jukka","Kari","Ville","Pekka","Riku","Joona","Suvi","Jarno","Kalle",
+        "Akseli","Teemu","Jari","Olli","Raimo","Anna","Aatu","Laura","Ritva","Tuija","Kaarlo","Johanna","Mari"};
+        int j = 1;
         for (String nimi: nimet){
             String numero = "0456747" + j;
-            if (tarkista_syotteet(nimi.toUpperCase(), numero, "", "")) {
-                lisaa_alkio(nimi.toUpperCase(),  numero,"");
-                //tietokanta.insertData(nimi.toUpperCase(), numero);
-            }
+            String synttarit = "01." + String.valueOf(j) + ".1993";
+            String nimpparit = "05." + String.valueOf(j);
+
+            lisaa_alkio(nimi.toUpperCase(),  numero, synttarit, nimpparit, "");
+            tietokanta.insertData(nimi, numero, synttarit, nimpparit);
             j++;
         }
     }

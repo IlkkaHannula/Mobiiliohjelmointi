@@ -27,7 +27,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table " + TAULUKON_NIMI + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, NIMI TEXT, NUMERO TEXT, SYNTYMAPAIVA DATE, NIMIPAIVA TEXT)");
+        db.execSQL("create table " + TAULUKON_NIMI + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, NIMI TEXT, NUMERO TEXT, SYNTYMAPAIVA TEXT, NIMIPAIVA TEXT)");
     }
 
     @Override
@@ -38,7 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //kerataan ensin tiedot ja sitten lisataan ne tietokantaan
-    public boolean insertData(String nimi, String numero, Date syntymapaiva, String nimipaiva){
+    public boolean insertData(String nimi, String numero, String syntymapaiva, String nimipaiva){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SARAKE_2, nimi);
@@ -50,12 +50,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //jos jotain dataa halutaan muutta tehdaan ensin uudet tiedot ja paivitetaan
-    public boolean updateData(String id, String uusi_nimi, String uusi_numero){
+    public boolean updateData(String id, String uusi_nimi, String uusi_numero, String syntymapaiva, String nimipaiva){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(SARAKE_1, id);
         contentValues.put(SARAKE_2, uusi_nimi);
         contentValues.put(SARAKE_3, uusi_numero);
+        contentValues.put(SARAKE_4, syntymapaiva);
+        contentValues.put(SARAKE_5, nimipaiva);
         db.update(TAULUKON_NIMI, contentValues, "ID = ?", new String[] {id});
         return true;
     }
