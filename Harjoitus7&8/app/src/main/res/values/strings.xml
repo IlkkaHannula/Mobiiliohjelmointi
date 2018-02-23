@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Merkkipäivä muistio</string>
+    <string name="action_settings">Settings</string>
+    <string name="muokkaa_paalle">Muokkaus käyttöön</string>
+    <string name="lisaa">Lisää ja tarkista</string>
+    <string name="otsikko">Lisää tilinumero</string>
+    <string name="nimi">Nimi</string>
+    <string name="numero">Puhelinnumero</string>
+    <string name="syntymapaiva">Syntymäpäivä</string>
+    <string name="nimipaiva">Nimipäivä</string>
+    <string name="tallenna">Tallenna muutos</string>
+    <string name="lopeta">Lopeta poisto</string>
+    <string name="etsi_menu">Etsi tietoja</string>
+    <string name="poista_menu">Poista tietoja</string>
+    <string name="scrollaa_alas">Scrollaa alas</string>
+    <string name="kylla">Kyllä</string>
+    <string name="peruuta">Peruuta</string>
+    <string name="hae">Hae</string>
+    <string name="muokkaus_pois">Poistu muokkauksesta</string>
+    <string name="muokkaus_paalle">Muokkaus kayttöön</string>
+</resources>

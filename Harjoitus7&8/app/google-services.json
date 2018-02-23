@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "237337164917",
+    "firebase_url": "https://muistio-f29d6.firebaseio.com",
+    "project_id": "muistio-f29d6",
+    "storage_bucket": "muistio-f29d6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:237337164917:android:848e79e5c1af4b15",
+        "android_client_info": {
+          "package_name": "com.hannula.ilkka.muistio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "237337164917-oe4e40baf505tqauokr55vepca497vkm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hannula.ilkka.muistio",
+            "certificate_hash": "7c0bbd2248fa76a5d9e3206c407086972e7d2399"
+          }
+        },
+        {
+          "client_id": "237337164917-ovirt7el1pl6kee0dvr7aok3e1a5ghf6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4X-wgdPk_kwprFDyset8_YZBGOCOfwc4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "237337164917-ovirt7el1pl6kee0dvr7aok3e1a5ghf6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
