@@ -150,12 +150,7 @@ public class Muistio extends AppCompatActivity {
 
                         //lisataan tiedot tietokantaan ja nakyville,  scrollataan kohdalle
                         Info info = new Info(nimi, numero, synttari, nimppari);
-
-                        //TODO hoitaako databaseen puskeminen jo?!
-                        //lisaa_alkio(info,"");
-
-                        databaseReference.child(nimi).setValue(info);
-                        //databaseReference.child("infot").child(nimi).setValue(info);
+                        databaseReference.child(nimi.toUpperCase()).setValue(info);
 
                         Toast.makeText(Muistio.this, "Henkilön " + nimi.substring(0, 1) +
                                 nimi.substring(1).toLowerCase() + " tiedot lisätty", Toast.LENGTH_SHORT).show();
@@ -235,18 +230,13 @@ public class Muistio extends AppCompatActivity {
             return false;
         }
 
-        //TODO jos jaksaa niin tarkistuksen voi tehda
-        /*Cursor data = tietokanta.getAllData();
-        while (data.moveToNext()) {
-            if (data.getString(1).equals(nimi.toUpperCase()) && !data.getString(1).equals(muokkaamaton_nimi)) {
+
+        for(Info info: infot) {
+            if (info.getNimi().equals(nimi.toUpperCase()) && !info.getNimi().equals(muokkaamaton_nimi)) {
                 Toast.makeText(Muistio.this, "Nimelle on jo tallennettu tietoja", Toast.LENGTH_SHORT).show();
                 return false;
             }
-            else if (data.getString(2).equals(numero.toUpperCase()) && !data.getString(2).equals(muokkaamaton_numero)) {
-                Toast.makeText(Muistio.this, "Puhelinnumero on jo tallennettu toiselle nimelle", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        }*/
+        }
 
         if (laske_maara(synttari_pvm, '.') != 2){
             Toast.makeText(Muistio.this, "Syntymäpäivä väärää muotoa", Toast.LENGTH_SHORT).show();
@@ -401,7 +391,6 @@ public class Muistio extends AppCompatActivity {
         builder.show();
     }
 
-    //muokkaa saa parametreinaan vanhat tiedot
     public void muokkaa(Info info){
         String nimi = info.getNimi();
         String numero = info.getNumero();
@@ -429,7 +418,8 @@ public class Muistio extends AppCompatActivity {
         databaseReference.child(info.getNimi()).child("numero").setValue(uusi_numero);
         databaseReference.child(info.getNimi()).child("synttari").setValue(uusi_synttari);
         databaseReference.child(info.getNimi()).child("nimppari").setValue(uusi_nimppari);
-        databaseReference.child(info.getNimi()).child("nimi").setValue(uusi_nimi);
+        //databaseReference.child(info.getNimi()).child("nimi").setValue(uusi_nimi);
+
 
         Toast.makeText(Muistio.this, "Henkilön " + nimi + " tiedot muokattu", Toast.LENGTH_SHORT).show();
 
@@ -464,6 +454,7 @@ public class Muistio extends AppCompatActivity {
         toteuta_muokkaus_nappi.setVisibility(View.VISIBLE);
         toteuta_muokkaus_nappi.setEnabled(false);
         Toast.makeText(Muistio.this, "Muokkaus käytössä", Toast.LENGTH_SHORT).show();
+        nimi_teksti.setEnabled(false);
     }
 
     public void muokkaus_pois() {
@@ -472,6 +463,7 @@ public class Muistio extends AppCompatActivity {
         lisaa_nappi.setVisibility(View.VISIBLE);
         toteuta_muokkaus_nappi.setVisibility(View.GONE);
         alusta_tekstit();
+        nimi_teksti.setEnabled(false);
     }
 
     public void poista_kayttoon(){
@@ -568,8 +560,6 @@ public class Muistio extends AppCompatActivity {
         int indeksi =0;
         boolean loytyi = false;
 
-
-        //TODO kay nimien mukaan aakkosissa
         //kaydaan data lapi ja pysahdytaan kun jonkun nimen alkuosa vastaa hakuavainta
         for (Info info: infot) {
             String nimi_tieto = info.getNimi();
@@ -592,7 +582,6 @@ public class Muistio extends AppCompatActivity {
         int indeksi = 0 ;
 
         //kaydaan dataa lapi kunnes loytyy aakkosittain myohempana oleva nimi
-        //TODO muuta käymään läpi nimen mukaan
         for (Info info: infot) {
             String nimi_tieto = info.getNimi();
 
@@ -612,7 +601,6 @@ public class Muistio extends AppCompatActivity {
     //kaydaan dataa taas niin kauan, etta haluttu alkio loytyy
     public int loyda_alkion_indeksi(String nimi){
         int indeksi = 0;
-        //TODO muuta käymään läpi nimen mukaan
         for (Info info: infot) {
             String nimi_tieto = info.getNimi();
             if (nimi_tieto.equals(nimi.toUpperCase())){
@@ -643,11 +631,11 @@ public class Muistio extends AppCompatActivity {
         for (String nimi: nimet){
             String numero = "0456747" + j;
             String synttarit = "01." + String.valueOf(j) + ".1993";
-            String nimpparit = "05." + String.valueOf(j);
+            String nimpparit = "05." + String.valueOf(j) +".";
 
             Info info = new Info(nimi.toUpperCase(),  numero, synttarit, nimpparit);
 
-            databaseReference.child("infot").child(nimi).setValue(info);
+            databaseReference.child(nimi.toUpperCase()).setValue(info);
 
             j++;
         }

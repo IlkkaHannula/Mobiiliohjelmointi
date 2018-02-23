@@ -3,7 +3,7 @@
     <string name="action_settings">Settings</string>
     <string name="muokkaa_paalle">Muokkaus käyttöön</string>
     <string name="lisaa">Lisää ja tarkista</string>
-    <string name="otsikko">Lisää tilinumero</string>
+    <string name="otsikko">Lisää merkkipäivät</string>
     <string name="nimi">Nimi</string>
     <string name="numero">Puhelinnumero</string>
     <string name="syntymapaiva">Syntymäpäivä</string>
