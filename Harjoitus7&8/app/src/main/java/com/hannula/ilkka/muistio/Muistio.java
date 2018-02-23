@@ -17,7 +17,9 @@ import android.app.Service;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -32,14 +34,19 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.ValueEventListener;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -52,11 +59,21 @@ public class Muistio extends AppCompatActivity {
     InputMethodManager imm;
 
     private DatabaseReference databaseReference;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
+    private ValueEventListener mValueEventListener;
     private List<Info> infot;
+
+    static final int RC_SIGN_IN = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        databaseReference = database.getReference("infot");
+        mAuth = FirebaseAuth.getInstance();
+
         setContentView(R.layout.activity_muistio);
         nimi_teksti = (EditText)findViewById(R.id.nimi_syote);
         numero_teksti = (EditText)findViewById(R.id.numero_syote);
@@ -71,39 +88,60 @@ public class Muistio extends AppCompatActivity {
         poisto = false;
         infot = new ArrayList<Info>();
 
-
         nappien_alustus();
         alusta_tekstit();
 
         imm = (InputMethodManager)this.getSystemService(Service.INPUT_METHOD_SERVICE);
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference();
-
-        databaseReference.addValueEventListener(new ValueEventListener() {
+         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                infot = new ArrayList<Info>();
-                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
-                    Info info = singleSnapshot.getValue(Info.class);
-
-                    if (info != null){
-                        infot.add(info);
-                    }
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null){
+                    onSignedInInitializer(user.getDisplayName());
                 }
-                nayta_tallennetut();
-            }
+                else{
+                    onSignedOutCleanup();
+                    List<AuthUI.IdpConfig> providers = Arrays.asList(
+                            new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                    startActivityForResult(
+                        AuthUI.getInstance()
+                                .createSignInIntentBuilder()
+                                .setIsSmartLockEnabled(false)
+                                .setAvailableProviders(providers)
+                                .build(),
+                        RC_SIGN_IN);
+                }
             }
-        });
-
-        nayta_tallennetut();
+        };
 
         //lisaa_tarkistus_dataa();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAuth.addAuthStateListener(mAuthStateListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mAuthStateListener != null){
+            mAuth.removeAuthStateListener(mAuthStateListener);
+        }
+        if (mValueEventListener != null){
+            databaseReference.removeEventListener(mValueEventListener);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -126,9 +164,61 @@ public class Muistio extends AppCompatActivity {
         }
         else if (id == R.id.scrollaa_alas) {
             scrollattava_alue.fullScroll(ScrollView.FOCUS_DOWN);
+            return true;
+        }
+        else if (id == R.id.kirjaa_ulos) {
+            AuthUI.getInstance().signOut(this);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+
+            if (resultCode == RESULT_CANCELED) {
+                finish();
+            }
+        }
+    }
+
+    private void onSignedInInitializer(String displayName){
+        if (mValueEventListener == null){
+            mValueEventListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    infot = new ArrayList<Info>();
+                    for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                        Info info = singleSnapshot.getValue(Info.class);
+
+                        if (info != null){
+                            infot.add(info);
+                        }
+                    }
+                    nayta_tallennetut();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(Muistio.this, "Database error", Toast.LENGTH_SHORT).show();
+                }
+            };
+            databaseReference.addValueEventListener(mValueEventListener);
+        }
+    }
+
+    private void onSignedOutCleanup(){
+        scrollattava_alue.removeAllViews();
+        if (mValueEventListener != null){
+            databaseReference.removeEventListener(mValueEventListener);
+            mValueEventListener = null;
+        }
     }
 
     //sisaltaa nappien onclicklisterien alustuksen

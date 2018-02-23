@@ -16,6 +16,14 @@
     <item
         android:id="@+id/scrollaa_alas"
         android:title="@string/scrollaa_alas"
-        android:orderInCategory="101"
+        android:orderInCategory="102"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/kirjaa_ulos"
+        android:title="@string/kirjaa_ulos"
+        android:orderInCategory="103"
+        app:showAsAction="never" />
+
+
 </menu>

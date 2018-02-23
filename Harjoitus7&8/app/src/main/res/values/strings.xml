@@ -13,6 +13,7 @@
     <string name="etsi_menu">Etsi tietoja</string>
     <string name="poista_menu">Poista tietoja</string>
     <string name="scrollaa_alas">Scrollaa alas</string>
+    <string name="kirjaa_ulos">Kirjaa ulos</string>
     <string name="kylla">Kyllä</string>
     <string name="peruuta">Peruuta</string>
     <string name="hae">Hae</string>
