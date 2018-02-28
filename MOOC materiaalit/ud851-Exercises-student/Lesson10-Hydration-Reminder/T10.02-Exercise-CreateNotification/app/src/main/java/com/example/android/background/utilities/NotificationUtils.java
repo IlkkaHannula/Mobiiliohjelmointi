@@ -1,9 +1,52 @@
 package com.example.android.background.utilities;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.media.app.NotificationCompat;
+
+import com.example.android.background.MainActivity;
+import com.example.android.background.R;
+
 /**
  * Utility class for creating hydration notifications
  */
 public class NotificationUtils {
+
+    private static final int WATER_REMINDER_NOTIFICATION_ID = 1138;
+    private static final int WATER_REMINDER_PENDING_INTENT_ID = 111;
+    private static final String WATER_REMINDER_NOTIFICATION_CHANNEL_ID = "reminder_notification_channel";
+
+    public static void remindUserBecauseCharging(Context context){
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+
+        android.support.v4.app.NotificationCompat.Builder notificationBuilder = new android.support.v4.app.NotificationCompat.Builder(context,WATER_REMINDER_NOTIFICATION_CHANNEL_ID)
+                .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
+                .setSmallIcon(R.drawable.ic_drink_notification)
+                .setLargeIcon(largeIcon(context))
+                .setContentTitle(context.getString(R.string.charging_reminder_notification_title))
+                .setContentText(context.getString(R.string.charging_reminder_notification_body))
+                .setStyle(new android.support.v4.app.NotificationCompat.BigTextStyle().bigText(
+                        context.getString(R.string.charging_reminder_notification_body)))
+                .setDefaults(Notification.DEFAULT_VIBRATE)
+                .setContentIntent(contentIntent(context))
+                .setAutoCancel(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
+                && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            notificationBuilder.setPriority(android.support.v4.app.NotificationCompat.PRIORITY_HIGH);
+        }
+
+        notificationManager.notify(WATER_REMINDER_NOTIFICATION_ID, notificationBuilder.build());
+    }
 
     // TODO (7) Create a method called remindUserBecauseCharging which takes a Context.
     // This method will create a notification for charging. It might be helpful
@@ -29,6 +72,10 @@ public class NotificationUtils {
 
 
 
+    public static PendingIntent contentIntent(Context context){
+        Intent MainActivityIntent = new Intent(context, MainActivity.class);
+        return PendingIntent.getActivity(context, WATER_REMINDER_PENDING_INTENT_ID, MainActivityIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+    }
     // TODO (1) Create a helper method called contentIntent with a single parameter for a Context. It
     // should return a PendingIntent. This method will create the pending intent which will trigger when
     // the notification is pressed. This pending intent should open up the MainActivity.
@@ -43,6 +90,10 @@ public class NotificationUtils {
             // intent but update the data
 
 
+    public static Bitmap largeIcon(Context context){
+        Resources res = context.getResources();
+        return BitmapFactory.decodeResource(res, R.drawable.ic_local_drink_black_24px);
+    }
     // TODO (4) Create a helper method called largeIcon which takes in a Context as a parameter and
     // returns a Bitmap. This method is necessary to decode a bitmap needed for the notification.
         // TODO (5) Get a Resources object from the context.
