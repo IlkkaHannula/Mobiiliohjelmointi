@@ -3,11 +3,15 @@ package com.hannula.ilkka.ennustinvahti;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 import com.firebase.jobdispatcher.JobParameters;
@@ -51,7 +55,7 @@ public class EnnusteService extends JobService {
                     EnnustejsonString = getJsonFromServer(forecastURL);
                     haeNousuajat();
                     ennuste = new Ennuste(EnnustejsonString, nousut, laskut);
-                    //sendNotification(ennuste.muodostaTeksti());
+                    lahetaNotifikaatio(ennuste.muodostaTeksti(), EnnusteService.this);
                     Log.d("asd", ennuste.muodostaTeksti());
                     if (ennuste.getKorkeus() > raja){
                         //if edellisesta tarpeeksi kauan -> notifikaatio
@@ -124,9 +128,15 @@ public class EnnusteService extends JobService {
         }
     }
 
-    public void sendNotification(String text, Context context) {
+    public static void lahetaNotifikaatio(String text, Context context) {
 
-        //Context context = EnnusteService.this;
+        long aikaViimeNotifikaatiosta = EnnustePreferences
+                .kulunutAikaViimeNotifikaatiosta(context);
+
+        if (aikaViimeNotifikaatiosta < DateUtils.MINUTE_IN_MILLIS/3){//DateUtils.DAY_IN_MILLIS/2) {
+        Log.d("ASD","eivielä!!!");
+        return;
+        }
 
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -143,15 +153,17 @@ public class EnnusteService extends JobService {
                 .setContentText(text)
                 .setDefaults(Notification.DEFAULT_VIBRATE);
 
-        /*ntent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.androidauthority.com/"));
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.aaltopoiju.fi"));
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
-        mBuilder.setContentIntent(pendingIntent);*/
+        notificationBuilder.setContentIntent(pendingIntent);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
                 && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             notificationBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
         }
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+
+        EnnustePreferences.tallennaNotifikaationAika(context, System.currentTimeMillis());
     }
 }

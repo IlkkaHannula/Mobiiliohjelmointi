@@ -3,7 +3,6 @@ package com.hannula.ilkka.ennustinvahti;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,8 +17,6 @@ import com.firebase.jobdispatcher.Trigger;
 
 
 public class MainActivity extends AppCompatActivity {
-
-    private TextView esitysTextView;
     private Button hakuButton;
 
     @Override
@@ -28,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final Context context = this;
-
-        esitysTextView = findViewById(R.id.esitysTextView);
         hakuButton = findViewById(R.id.hakuButton);
         final EnnusteService asd = new EnnusteService();
 
@@ -37,18 +32,17 @@ public class MainActivity extends AppCompatActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        asd.sendNotification("asd", context);
+                        asd.lahetaNotifikaatio("asd", context);
                     }
                 }
         );
 
-
-        Driver driver = new GooglePlayDriver(MainActivity.this);
+        Driver driver = new GooglePlayDriver(this);
         FirebaseJobDispatcher firebaseJobDispatcher = new FirebaseJobDispatcher(driver);
 
         Job constraintReminderJob = firebaseJobDispatcher.newJobBuilder()
                 .setService(EnnusteService.class)
-                . setTag("asd_TAG")
+                .setTag("asd_TAG")
                 .setConstraints(Constraint.DEVICE_CHARGING)
                 .setLifetime(Lifetime.FOREVER)
                 .setRecurring(true)
@@ -58,6 +52,5 @@ public class MainActivity extends AppCompatActivity {
                 .build();
 
         firebaseJobDispatcher.schedule(constraintReminderJob);
-
     }
 }
