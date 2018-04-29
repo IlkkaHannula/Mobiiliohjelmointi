@@ -42,8 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         Job constraintReminderJob = firebaseJobDispatcher.newJobBuilder()
                 .setService(EnnusteService.class)
-                .setTag("asd_TAG")
-                .setConstraints(Constraint.DEVICE_CHARGING)
+                .setTag("firebaseJobTag")
                 .setLifetime(Lifetime.FOREVER)
                 .setRecurring(true)
                 //lopulta kannattaa laittaa tyyliin 2h ja 2h15min tms

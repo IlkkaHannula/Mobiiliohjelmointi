@@ -32,7 +32,6 @@ import java.util.Date;
 
 public class EnnusteService extends JobService {
 
-    private double raja = 1.6;
     private AsyncTask mBackgroundTask;
     private String EnnustejsonString;
     private String forecastURL = "https://app.fcoo.dk/metoc/v2/data/timeseries?variables=WaveHeight2D,WavePeriod&lat=61.6&lon=21.25";
@@ -57,8 +56,9 @@ public class EnnusteService extends JobService {
                     ennuste = new Ennuste(EnnustejsonString, nousut, laskut);
                     lahetaNotifikaatio(ennuste.muodostaTeksti(), EnnusteService.this);
                     Log.d("asd", ennuste.muodostaTeksti());
-                    if (ennuste.getKorkeus() > raja){
-                        //if edellisesta tarpeeksi kauan -> notifikaatio
+
+                    if (ennuste.getKorkeus() > EnnustePreferences.haeEnnusteRaja(context)) {
+                        lahetaNotifikaatio(ennuste.muodostaTeksti(), EnnusteService.this);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -67,8 +67,6 @@ public class EnnusteService extends JobService {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-
-
                 Log.i("TAG", "onStartJob");
                 return null;
             }
@@ -151,7 +149,8 @@ public class EnnusteService extends JobService {
                 .setSmallIcon(R.drawable.asd_kuva)
                 .setContentTitle("Aaltoja tulossa")
                 .setContentText(text)
-                .setDefaults(Notification.DEFAULT_VIBRATE);
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(text));
+                //.setDefaults(Notification.DEFAULT_VIBRATE);
 
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.aaltopoiju.fi"));
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
