@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.text.format.DateUtils;
 import android.util.Log;
 
@@ -54,11 +53,9 @@ public class EnnusteService extends JobService {
                     EnnustejsonString = getJsonFromServer(forecastURL);
                     haeNousuajat();
                     ennuste = new Ennuste(EnnustejsonString, nousut, laskut);
-                    lahetaNotifikaatio(ennuste.muodostaTeksti(), EnnusteService.this);
-                    Log.d("asd", ennuste.muodostaTeksti());
 
                     if (ennuste.getKorkeus() > EnnustePreferences.haeEnnusteRaja(context)) {
-                        lahetaNotifikaatio(ennuste.muodostaTeksti(), EnnusteService.this);
+                        notifikoiJosTarve(ennuste.muodostaTeksti(), EnnusteService.this);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -67,16 +64,12 @@ public class EnnusteService extends JobService {
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                Log.i("TAG", "onStartJob");
                 return null;
             }
 
             @Override
             protected void onPostExecute(Object o) {
-                /* false means, that job is done. we don't want to reschedule it*/
-
                 jobFinished(jobParameters, true);
-                Log.i("TAG", "onStartJob- OnPost");
             }
         };
 
@@ -89,7 +82,6 @@ public class EnnusteService extends JobService {
         if (mBackgroundTask != null) {
             mBackgroundTask.cancel(true);
         }
-        Log.i("TAG", "onStopJob");
         return true;
     }
 
@@ -111,7 +103,7 @@ public class EnnusteService extends JobService {
     private void haeNousuajat() throws JSONException, ParseException, IOException {
         String alkuURL = "https://api.sunrise-sunset.org/json?lat=61.6&lng=21.25&formatted=0&date=";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss+00:00");
-        //dynamic aurinkoDatat;
+
         for (int i = 0; i < 3; i++){
             Calendar day = Calendar.getInstance();
             day.setTime(new Date());
@@ -126,16 +118,24 @@ public class EnnusteService extends JobService {
         }
     }
 
-    public static void lahetaNotifikaatio(String text, Context context) {
+    public static void notifikoiJosTarve(String text, Context context) {
 
         long aikaViimeNotifikaatiosta = EnnustePreferences
                 .kulunutAikaViimeNotifikaatiosta(context);
 
-        if (aikaViimeNotifikaatiosta < DateUtils.MINUTE_IN_MILLIS/3){//DateUtils.DAY_IN_MILLIS/2) {
-        Log.d("ASD","eivielä!!!");
-        return;
+        int halytysvali = EnnustePreferences.haeHalytysvali(context);
+
+        if (aikaViimeNotifikaatiosta < DateUtils.HOUR_IN_MILLIS*halytysvali) {
+            Log.d("ASD","Notifikaatio lähetetty vasta.");
+            return;
         }
 
+        lahetaNotifikaatio(text, context);
+
+        EnnustePreferences.tallennaNotifikaationAika(context, System.currentTimeMillis());
+    }
+
+    public static void lahetaNotifikaatio(String text, Context context){
         NotificationManager notificationManager = (NotificationManager)
                 context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -149,8 +149,8 @@ public class EnnusteService extends JobService {
                 .setSmallIcon(R.drawable.asd_kuva)
                 .setContentTitle("Aaltoja tulossa")
                 .setContentText(text)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(text));
-                //.setDefaults(Notification.DEFAULT_VIBRATE);
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
+                .setDefaults(Notification.DEFAULT_VIBRATE);
 
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.aaltopoiju.fi"));
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
@@ -162,7 +162,5 @@ public class EnnusteService extends JobService {
             notificationBuilder.setPriority(NotificationCompat.PRIORITY_HIGH);
         }
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
-
-        EnnustePreferences.tallennaNotifikaationAika(context, System.currentTimeMillis());
     }
 }

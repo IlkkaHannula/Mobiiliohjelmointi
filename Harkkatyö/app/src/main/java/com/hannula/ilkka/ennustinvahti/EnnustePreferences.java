@@ -29,4 +29,28 @@ public final class EnnustePreferences {
         editor.putFloat("ennuste_raja", raja);
         editor.apply();
     }
+
+    public static int haeHalytysvali(Context context){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getInt("halytysvali", 12);
+    }
+
+    public static void tallennaHalytysvali(Context context, int vali) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt("halytysvali", vali);
+        editor.apply();
+    }
+
+    public static boolean onkoHalytyksetPaalla(Context context){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        return sp.getBoolean("halytyksetPaalla", true);
+    }
+
+    public static void asetaHalytyksetPaalle(Context context, boolean paalla) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean("halytyksetPaalla", paalla);
+        editor.apply();
+    }
 }

@@ -1,31 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.hannula.ilkka.ennustinvahti.MainActivity">
 
-    <TextView
-        android:id="@+id/esitysTextView"
+    <Button
+        android:id="@+id/rajaButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Raja notifikaation lähettämiseen"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.457"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.16" />
+        android:layout_below="@id/paallaButton"
+        android:layout_toEndOf="@+id/RajaEditText"
+        android:text="Aseta uusi raja" />
 
     <Button
-        android:id="@+id/hakuButton"
+        android:id="@+id/valiButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Hae ennuste"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/esitysTextView" />
+        android:layout_below="@id/rajaButton"
+        android:layout_toEndOf="@+id/ValiEditText"
+        android:text="Aseta uusi hälytysväli" />
 
-</android.support.constraint.ConstraintLayout>
+    <ToggleButton
+        android:id="@+id/paallaButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/textView"
+        android:text="ToggleButton"
+        tools:layout_editor_absoluteX="362dp"
+        tools:layout_editor_absoluteY="63dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hälytyspalvelu päällä"
+        android:textSize="23sp" />
+
+
+    <EditText
+        android:id="@+id/RajaEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/paallaButton"
+        android:ems="10"
+        android:hint="Raja hälytettäville ennusteille"
+        android:inputType="numberDecimal" />
+
+    <EditText
+        android:id="@+id/ValiEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rajaButton"
+        android:ems="10"
+        android:hint="Kesto halytysten välillä"
+        android:inputType="number" />
+
+
+</RelativeLayout>

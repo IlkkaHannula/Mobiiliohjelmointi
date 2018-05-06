@@ -68,7 +68,7 @@ public class Ennuste {
 
     public String muodostaTeksti(){
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM. HH:mm");
-        return "Korkeus: " + String.format("%.2f", korkeus) + " suunta: " + String.format("%.0f", suunta) + " periodi: " + String.format("%.1f", periodi) + " huippu: " + sdf.format(huipunAika);
+        return "Korkeus, " + String.format("%.2f", korkeus) + "m, suunta " + String.format("%.0f", suunta) + "°, ja periodi " + String.format("%.1f", periodi) + "s, " + sdf.format(huipunAika);
 
     }
 }
